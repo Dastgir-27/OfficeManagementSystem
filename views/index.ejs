@@ -1,0 +1,69 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="text-center">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Office Management Dashboard</h1>
+    
+    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <!-- Employees Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+            <div class="text-blue-600 mb-4">
+                <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Employee Management</h2>
+            <p class="text-gray-600 mb-6">Manage employee records, assignments, and hierarchies</p>
+            <div class="space-y-3">
+                <a href="/employees" class="block w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 transition-colors">
+                    View All Employees
+                </a>
+                <a href="/employees/new" class="block w-full bg-green-600 text-white py-3 px-4 rounded hover:bg-green-700 transition-colors">
+                    Add New Employee
+                </a>
+            </div>
+        </div>
+
+        <!-- Departments Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+            <div class="text-green-600 mb-4">
+                <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Department Management</h2>
+            <p class="text-gray-600 mb-6">Organize and manage company departments</p>
+            <div class="space-y-3">
+                <a href="/departments" class="block w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 transition-colors">
+                    View All Departments
+                </a>
+                <a href="/departments/new" class="block w-full bg-green-600 text-white py-3 px-4 rounded hover:bg-green-700 transition-colors">
+                    Add New Department
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-12 bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">System Features</h3>
+        <div class="grid md:grid-cols-2 gap-4 text-left">
+            <div>
+                <h4 class="font-semibold text-gray-700">Employee Management</h4>
+                <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                    <li>• CRUD operations</li>
+                    <li>• Supervisor relationships</li>
+                    <li>• Location integration</li>
+                    <li>• Search & pagination</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-gray-700">Department Management</h4>
+                <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                    <li>• Department organization</li>
+                    <li>• Budget tracking</li>
+                    <li>• Employee assignments</li>
+                    <li>• Location management</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

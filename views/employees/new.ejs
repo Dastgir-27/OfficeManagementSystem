@@ -1,0 +1,245 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Add New Employee</h1>
+        <a href="/employees" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+            Back to Employees
+        </a>
+    </div>
+
+    <% if (typeof error !== 'undefined') { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <form method="POST" action="/employees" class="bg-white rounded-lg shadow-md p-6">
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Personal Information -->
+            <div class="md:col-span-2">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                <input type="text" name="firstName" required 
+                       value="<%= typeof formData !== 'undefined' ? formData.firstName || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                <input type="text" name="lastName" required 
+                       value="<%= typeof formData !== 'undefined' ? formData.lastName || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                <input type="email" name="email" required 
+                       value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                <input type="tel" name="phone" 
+                       value="<%= typeof formData !== 'undefined' ? formData.phone || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Work Information -->
+            <div class="md:col-span-2 mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Work Information</h3>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Job Title *</label>
+                <input type="text" name="jobTitle" required 
+                       value="<%= typeof formData !== 'undefined' ? formData.jobTitle || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Department *</label>
+                <select name="department" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Department</option>
+                    <% departments.forEach(dept => { %>
+                        <option value="<%= dept._id %>" 
+                                <%= typeof formData !== 'undefined' && formData.department === dept._id.toString() ? 'selected' : '' %>>
+                            <%= dept.name %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Supervisor</label>
+                <select name="supervisor" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">No Supervisor</option>
+                    <% supervisors.forEach(supervisor => { %>
+                        <option value="<%= supervisor._id %>" 
+                                <%= typeof formData !== 'undefined' && formData.supervisor === supervisor._id.toString() ? 'selected' : '' %>>
+                            <%= supervisor.firstName %> <%= supervisor.lastName %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Salary</label>
+                <input type="number" name="salary" min="0" step="0.01" 
+                       value="<%= typeof formData !== 'undefined' ? formData.salary || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Hire Date</label>
+                <input type="date" name="hireDate" 
+                       value="<%= typeof formData !== 'undefined' ? formData.hireDate || '' : '' %>"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="active" <%= typeof formData !== 'undefined' && formData.status === 'active' ? 'selected' : '' %>>Active</option>
+                    <option value="inactive" <%= typeof formData !== 'undefined' && formData.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                    <option value="terminated" <%= typeof formData !== 'undefined' && formData.status === 'terminated' ? 'selected' : '' %>>Terminated</option>
+                </select>
+            </div>
+
+            <!-- Location Information -->
+            <div class="md:col-span-2 mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Location Information</h3>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                <select id="country" name="location[country]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Country</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">State</label>
+                <select id="state" name="location[state]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select State</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                <select id="city" name="location[city]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select City</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-end space-x-3">
+            <a href="/employees" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Cancel</a>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Create Employee
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+$(document).ready(function() {
+    const countrySelect = $('#country');
+    const stateSelect = $('#state');
+    const citySelect = $('#city');
+    
+    // Load countries on page load
+    loadCountries(countrySelect);
+    
+    // Handle country change
+    countrySelect.change(function() {
+        const country = $(this).val();
+        loadStates(country, stateSelect, citySelect);
+    });
+    
+    // Handle state change
+    stateSelect.change(function() {
+        const country = countrySelect.val();
+        const state = $(this).val();
+        loadCities(country, state, citySelect);
+    });
+});
+
+function loadCountries(countrySelect) {
+    $.ajax({
+        url: '/api/countries',
+        method: 'GET',
+        success: function(countries) {
+            countrySelect.empty().append('<option value="">Select Country</option>');
+            countries.forEach(country => {
+                countrySelect.append(`<option value="${country.name}">${country.name}</option>`);
+            });
+        },
+        error: function() {
+            console.error('Failed to load countries');
+            countrySelect.empty().append('<option value="">Error loading countries</option>');
+        }
+    });
+}
+
+function loadStates(country, stateSelect, citySelect) {
+    if (!country) {
+        stateSelect.empty().append('<option value="">Select State</option>');
+        citySelect.empty().append('<option value="">Select City</option>');
+        return;
+    }
+    
+    $.ajax({
+        url: `/api/states/${encodeURIComponent(country)}`,
+        method: 'GET',
+        success: function(states) {
+            stateSelect.empty().append('<option value="">Select State</option>');
+            citySelect.empty().append('<option value="">Select City</option>');
+            
+            if (states && states.length > 0) {
+                states.forEach(state => {
+                    stateSelect.append(`<option value="${state.name}">${state.name}</option>`);
+                });
+            } else {
+                stateSelect.append('<option value="">No states available</option>');
+            }
+        },
+        error: function() {
+            console.error('Failed to load states for country:', country);
+            stateSelect.empty().append('<option value="">Error loading states</option>');
+            citySelect.empty().append('<option value="">Select City</option>');
+        }
+    });
+}
+
+function loadCities(country, state, citySelect) {
+    if (!country || !state) {
+        citySelect.empty().append('<option value="">Select City</option>');
+        return;
+    }
+    
+    $.ajax({
+        url: `/api/cities/${encodeURIComponent(country)}/${encodeURIComponent(state)}`,
+        method: 'GET',
+        success: function(cities) {
+            citySelect.empty().append('<option value="">Select City</option>');
+            
+            if (cities && cities.length > 0) {
+                cities.forEach(city => {
+                    citySelect.append(`<option value="${city}">${city}</option>`);
+                });
+            } else {
+                citySelect.append('<option value="">No cities available</option>');
+            }
+        },
+        error: function() {
+            console.error('Failed to load cities for state:', state);
+            citySelect.empty().append('<option value="">Error loading cities</option>');
+        }
+    });
+}
+</script>

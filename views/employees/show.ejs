@@ -1,0 +1,178 @@
+<% layout('layouts/boilerplate') %>
+
+
+<div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Employee Details</h1>
+        <div class="space-x-2">
+            <a href="/employees/<%= employee._id %>/edit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Edit</a>
+            <a href="/employees" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Back to List</a>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Employee Information Card -->
+        <div class="md:col-span-2 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Employee Information</h2>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Full Name</h3>
+                    <p class="text-lg text-gray-800"><%= employee.firstName %> <%= employee.lastName %></p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Email</h3>
+                    <p class="text-lg text-gray-800"><%= employee.email %></p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Phone</h3>
+                    <p class="text-lg text-gray-800"><%= employee.phone %></p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Job Title</h3>
+                    <p class="text-lg text-gray-800"><%= employee.jobTitle %></p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Department</h3>
+                    <p class="text-lg text-gray-800">
+                        <% if (employee.department) { %>
+                            <a href="/departments/<%= employee.department._id %>" class="text-blue-600 hover:underline">
+                                <%= employee.department.name %>
+                            </a>
+                        <% } else { %>
+                            <span class="text-gray-400">No department assigned</span>
+                        <% } %>
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Supervisor</h3>
+                    <p class="text-lg text-gray-800">
+                        <% if (employee.supervisor) { %>
+                            <a href="/employees/<%= employee.supervisor._id %>" class="text-blue-600 hover:underline">
+                                <%= employee.supervisor.firstName %> <%= employee.supervisor.lastName %>
+                            </a>
+                        <% } else { %>
+                            <span class="text-gray-400">No supervisor assigned</span>
+                        <% } %>
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Salary</h3>
+                    <p class="text-lg text-gray-800">$<%= employee.salary ? employee.salary.toLocaleString() : 'Not specified' %></p>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium text-gray-500">Hire Date</h3>
+                    <p class="text-lg text-gray-800">
+                        <%= employee.hireDate ? new Date(employee.hireDate).toLocaleDateString() : 'Not specified' %>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Address Section -->
+            <% if (employee.address) { %>
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">Address</h3>
+                <div class="bg-gray-50 p-4 rounded">
+                    <p class="text-gray-700">
+                        <% if (employee.address.street) { %><%= employee.address.street %><br><% } %>
+                        <% if (employee.address.city) { %><%= employee.address.city %>, <% } %>
+                        <% if (employee.address.state) { %><%= employee.address.state %> <% } %>
+                        <% if (employee.address.zipCode) { %><%= employee.address.zipCode %><br><% } %>
+                        <% if (employee.address.country) { %><%= employee.address.country %><% } %>
+                    </p>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        
+        <!-- Quick Actions Card -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+            <div class="space-y-3">
+                <a href="/employees/<%= employee._id %>/edit" 
+                   class="block w-full text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    Edit Employee
+                </a>
+                <button onclick="deleteEmployee('<%= employee._id %>')" 
+                        class="block w-full text-center bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                    Delete Employee
+                </button>
+                <a href="/employees" 
+                   class="block w-full text-center bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Team Members Section -->
+    
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Delete</h3>
+            <p class="text-gray-600 mb-6">Are you sure you want to delete this employee? This action cannot be undone.</p>
+            <div class="flex space-x-3">
+                <button id="confirmDelete" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    Delete
+                </button>
+                <button onclick="closeDeleteModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let employeeToDelete = null;
+
+function deleteEmployee(employeeId) {
+    employeeToDelete = employeeId;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    employeeToDelete = null;
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
+document.getElementById('confirmDelete').addEventListener('click', function() {
+    if (employeeToDelete) {
+        fetch(`/employees/${employeeToDelete}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/employees';
+            } else {
+                alert('Error deleting employee: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting employee');
+        });
+    }
+    closeDeleteModal();
+});
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+</script>

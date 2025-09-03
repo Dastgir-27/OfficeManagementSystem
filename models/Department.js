@@ -1,0 +1,28 @@
+
+// models/Department.js
+const mongoose = require('mongoose');
+
+const departmentSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  budget: {
+    type: Number,
+    min: 0
+  },
+  location: {
+    type: String,
+    trim: true
+  }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Department', departmentSchema);
